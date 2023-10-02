@@ -93,7 +93,7 @@ app.get('/blogs/:id',async (req,res) => {
 
 
 // CRETE Blog API
-app.post('/createBlog', async(req,res) => {
+app.post('/blogs', async(req,res) => {
     const title = req.body.title
     const subTitle = req.body.subTitle
     const description = req.body.description
@@ -107,16 +107,65 @@ app.post('/createBlog', async(req,res) => {
         description : description
     })
 
-    res.json({
-        status : 201,
-        message : 'Blog creates successfully'
-    })
-
-    // res.status(200).json({               //Alternative
+    // res.json({                                  //Alternative
+    //     status : 201,
     //     message : 'Blog creates successfully'
     // })
+
+    res.status(200).json({               
+        message : 'Blog creates successfully'
+    })
 })
 
+
+// UPDATE Blog API
+app.patch('/blogs/:id',async (req,res) => {
+    const id = req.params.id
+    const title = req.body.title
+    const subTitle = req.body.subTitle
+    const description = req.body.description
+
+    // const title = req.body.title
+    // const foundBlogWithTitle = await Blog.find({
+    //     title : title
+    // })
+    // console.log(foundBlogWithTitle)
+    // foundBlogWithTitle[0].description = description
+    // foundBlogWithTitle[0].subTitle = subTitle
+    // await foundBlogWithTitle.save()
+    // const {title,subTitle,description} = req.body      // Alternative
+
+    // Check if blog already exists or not
+    // const isBlogFound = await Blog.find({
+    //     id :id
+    // })
+    // if(isBlogFound.length == 0)
+    // res.json({
+    //     message : 'No blogs found'
+    // })
+
+    await Blog.findByIdAndUpdate(id,{
+        title : title,
+        subTitle : subTitle,
+        description : description
+    })
+
+    res.status(200).json({
+        message : 'Blog updated successfully'
+    })
+})
+
+// DELETE API
+app.delete('/blogs/:id', async (req, res) =>{
+    const id = req.params.id
+    // const {id} = req.params
+
+    await Blog.findByIdAndDelete(id)
+
+    res.status(200).json({
+        message : 'Blog deleted successfully'
+    })
+})
 
 app.listen(2000,() => {
     console.log('NodeJS listening on port 2000')
